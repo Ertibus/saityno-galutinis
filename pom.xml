@@ -58,7 +58,12 @@
 			<version>${sqlite.api.version}</version>
 		</dependency>
 
-
+		<!-- JSON simple -->
+		<dependency>
+			<groupId>org.apache.clerezza.ext</groupId>
+			<artifactId>org.json.simple</artifactId>
+			<version>0.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>

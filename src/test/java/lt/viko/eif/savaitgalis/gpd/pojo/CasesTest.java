@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CasesTest {
 
+    /**
+     * Test for the Getter and Setter of 'newCases' field
+     */
     @Test
     void getterSetterNewCases() {
         Cases cases = new Cases();
@@ -21,6 +24,9 @@ class CasesTest {
         assertEquals(77777, cases.getNewCases());
     }
 
+    /**
+     * Test for the Getter and Setter of 'active' field
+     */
     @Test
     void getterSetterActive() {
         Cases cases = new Cases();
@@ -29,6 +35,9 @@ class CasesTest {
         assertEquals(77777, cases.getActive());
     }
 
+    /**
+     * Test for the Getter and Setter of 'critical' field
+     */
     @Test
     void getterSetterCritical() {
         Cases cases = new Cases();
@@ -37,6 +46,9 @@ class CasesTest {
         assertEquals(77777, cases.getCritical());
     }
 
+    /**
+     * Test for the Getter and Setter of 'recovered' field
+     */
     @Test
     void getterSetterRecovered() {
         Cases cases = new Cases();
@@ -45,6 +57,9 @@ class CasesTest {
         assertEquals(77777, cases.getRecovered());
     }
 
+    /**
+     * Test for the Getter and Setter of 'total' field
+     */
     @Test
     void getterSetterTotal() {
         Cases cases = new Cases();

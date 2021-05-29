@@ -13,11 +13,40 @@ package lt.viko.eif.savaitgalis.gpd.pojo;
  * @see Deaths
  */
 public class Country {
-    private String country = "country";
-    private String date = "1999-12-25";
-    private int tests = 0;
-    private Cases cases = new Cases();
-    private Deaths deaths = new Deaths();
+    private String country;
+    private String date;
+    private int tests;
+    private Cases cases;
+    private Deaths deaths;
+
+    /**
+     * Empty constructor. Sets default values.
+     */
+    public Country() {
+        this.country = "country";
+        this.date = "1999-12-25";
+        this.tests = 0;
+        this.cases  = new Cases();
+        this.deaths = new Deaths();
+    }
+
+    /**
+     * Constructor with parameters.
+     * @param country Name of the country
+     * @param date Date the data represents
+     * @param tests Total number of tests
+     * @param cases {@link Cases} object
+     * @param deaths {@link Deaths} object
+     * @see Cases
+     * @see Deaths
+     */
+    public Country(String country, String date, int tests, Cases cases, Deaths deaths) {
+        this.country = country;
+        this.date = date;
+        this.tests = tests;
+        this.cases = cases;
+        this.deaths = deaths;
+    }
 
     /**
      * Getter for the country name

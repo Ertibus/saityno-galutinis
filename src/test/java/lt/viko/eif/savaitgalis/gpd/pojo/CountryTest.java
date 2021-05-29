@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CountryTest {
 
+    /**
+     * Test for the Getter and Setter of 'country' field
+     */
     @Test
     void getterSetterCountry() {
         Country country = new Country();
@@ -23,7 +26,9 @@ class CountryTest {
         country.setCountry(value);
         assertEquals("77777", country.getCountry());
     }
-
+    /**
+     * Test for the Getter and Setter of 'date' field
+     */
     @Test
     void getterSetterDate() {
         Country country = new Country();
@@ -31,7 +36,9 @@ class CountryTest {
         country.setDate(value);
         assertEquals("77777", country.getDate());
     }
-
+    /**
+     * Test for the Getter and Setter of 'tests' field
+     */
     @Test
     void getterSetterTests() {
         Country country = new Country();
@@ -39,7 +46,10 @@ class CountryTest {
         country.setTests(value);
         assertEquals(77777, country.getTests());
     }
-
+    /**
+     * Test for the Getter and Setter of {@link Cases} field
+     * @see Cases
+     */
     @Test
     void getterSetterCases() {
         Country country = new Country();
@@ -47,6 +57,10 @@ class CountryTest {
         assertEquals(new Cases().toString(), country.getCases().toString());
     }
 
+    /**
+     * Test for the Getter and Setter of {@link Deaths} field
+     * @see Deaths
+     */
     @Test
     void getterSetterDeaths() {
         Country country = new Country();
@@ -54,14 +68,17 @@ class CountryTest {
         assertEquals(new Deaths().toString(), country.getDeaths().toString());
     }
 
+    /**
+     * Test that simply prints the structure of {@link Country}
+     * @see Country
+     */
     @Test
     void basicPojoStruct(){
         try {
             Country country = new Country();
-            System.out.println(country.toString());
+            System.out.println(country);
         } catch (Exception ex) {
             fail("For some reason this test failed :/\n" + ex.getMessage());
         }
-
     }
 }

@@ -11,11 +11,38 @@ package lt.viko.eif.savaitgalis.gpd.pojo;
  * @see Country
  */
 public class Cases {
-    private int newCases = 0;
-    private int active = 0;
-    private int critical = 0;
-    private int recovered = 0;
-    private int total = 0;
+    private int newCases;
+    private int active;
+    private int critical;
+    private int recovered;
+    private int total;
+
+    /**
+     * Empty constructor. Sets default values
+     */
+    public Cases() {
+        this.newCases = 0;
+        this.active = 0;
+        this.critical = 0;
+        this.recovered = 0;
+        this.total = 0;
+    }
+
+    /**
+     * Constructor with parameters.
+     * @param newCases Number of new cases
+     * @param active Number of active cases
+     * @param critical Number of critical cases
+     * @param recovered Number of recoveries
+     * @param total Total number of cases
+     */
+    public Cases(int newCases, int active, int critical, int recovered, int total) {
+        this.newCases = newCases;
+        this.active = active;
+        this.critical = critical;
+        this.recovered = recovered;
+        this.total = total;
+    }
 
     /**
      * Getter for new cases of Covid-19

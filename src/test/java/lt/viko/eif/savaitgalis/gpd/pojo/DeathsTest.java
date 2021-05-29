@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DeathsTest {
 
+    /**
+     * Test for the Getter and Setter of 'newDeaths' field
+     */
     @Test
     void getterSetterNewDeaths() {
         Deaths deaths = new Deaths();
@@ -21,6 +24,9 @@ class DeathsTest {
         assertEquals(77777, deaths.getNewDeaths());
     }
 
+    /**
+     * Test for the Getter and Setter of 'total' field
+     */
     @Test
     void getterSetterTotalDeaths() {
         Deaths deaths = new Deaths();

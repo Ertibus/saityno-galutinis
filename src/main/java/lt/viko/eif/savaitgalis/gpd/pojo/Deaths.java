@@ -12,8 +12,26 @@ package lt.viko.eif.savaitgalis.gpd.pojo;
  */
 public class Deaths {
 
-    private int newDeaths = 0;
-    private int total = 0;
+    private int newDeaths;
+    private int total;
+
+    /**
+     * Empty constructor. Sets default values
+     */
+    public Deaths(){
+        this.newDeaths = 0;
+        this.total = 0;
+    }
+
+    /**
+     * Constructor with parameters
+     * @param newDeaths number of new deaths
+     * @param total number of total deaths
+     */
+    public Deaths(int newDeaths, int total) {
+        this.newDeaths = newDeaths;
+        this.total = total;
+    }
 
     /**
      * Getter for the number of new deaths caused by Covid-19
