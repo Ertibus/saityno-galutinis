@@ -50,7 +50,7 @@ public class ResponseToPojo {
         JSONObject newestResponse = (JSONObject)responseArray.get(0);
 
         returnCountry.setCountry(newestResponse.get("country").toString());
-        returnCountry.setDate(newestResponse.get("day").toString());
+        returnCountry.setDate(Integer.parseInt(newestResponse.get("day").toString().replaceAll("-", "")));
 
         JSONObject casesObject = (JSONObject)newestResponse.get("cases");
         Cases cases = new Cases();
@@ -88,6 +88,6 @@ public class ResponseToPojo {
     public static Country responseFromResultSet(ResultSet resultSet) throws SQLException {
         Cases cases = new Cases(resultSet.getInt(sqlCasesNew), resultSet.getInt(sqlCasesActive), resultSet.getInt(sqlCasesCritical), resultSet.getInt(sqlCasesRecovered), resultSet.getInt(sqlCasesTotal));
         Deaths deaths = new Deaths(resultSet.getInt(sqlDeathsNew), resultSet.getInt(sqlDeathsTotal));
-        return new Country(resultSet.getString(sqlCountry), resultSet.getString(sqlDate), resultSet.getInt(sqlTests), cases, deaths);
+        return new Country(resultSet.getString(sqlCountry), resultSet.getInt(sqlDate), resultSet.getInt(sqlTests), cases, deaths);
     }
 }
