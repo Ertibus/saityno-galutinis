@@ -37,11 +37,11 @@ public class CovidApiRepository {
      */
     private Connection connectToDB() {
 
-        String url = DB_URL;
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return conn;
     }
@@ -74,6 +74,7 @@ public class CovidApiRepository {
                     return true;
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -83,8 +84,7 @@ public class CovidApiRepository {
      */
     private void removeExpiredData() {
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-        int intTodayDate = Integer.parseInt(simpleDateFormat.format(new java.util.Date()));
+        int intTodayDate = Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(new java.util.Date()));
 
         String sql = "DELETE FROM `cache` WHERE expiration_date <= ?";
         try {
@@ -94,6 +94,7 @@ public class CovidApiRepository {
 
             prepStat.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -122,6 +123,7 @@ public class CovidApiRepository {
                 return ResponseToPojo.responseFromResultSet(rs);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -153,16 +155,16 @@ public class CovidApiRepository {
         try {
             PreparedStatement prepStat  = conn.prepareStatement(sql);
 
-            prepStat.setString(1,country.getCountry());
-            prepStat.setInt(2,country.getDate());
-            prepStat.setInt(3,country.getTests());
-            prepStat.setInt(4,country.getCases().getNewCases());
-            prepStat.setInt(5,country.getCases().getActive());
-            prepStat.setInt(6,country.getCases().getCritical());
-            prepStat.setInt(7,country.getCases().getRecovered());
-            prepStat.setInt(8,country.getCases().getTotal());
-            prepStat.setInt(9,country.getDeaths().getNewDeaths());
-            prepStat.setInt(10,country.getDeaths().getTotalDeaths());
+            prepStat.setString(1, country.getCountry());
+            prepStat.setInt(2, intTargetDate);
+            prepStat.setInt(3, country.getTests());
+            prepStat.setInt(4, country.getCases().getNewCases());
+            prepStat.setInt(5, country.getCases().getActive());
+            prepStat.setInt(6, country.getCases().getCritical());
+            prepStat.setInt(7, country.getCases().getRecovered());
+            prepStat.setInt(8, country.getCases().getTotal());
+            prepStat.setInt(9, country.getDeaths().getNewDeaths());
+            prepStat.setInt(10, country.getDeaths().getTotalDeaths());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
             Calendar c = Calendar.getInstance();
@@ -173,7 +175,42 @@ public class CovidApiRepository {
 
             prepStat.executeUpdate();
         } catch (SQLException | ParseException e) {
+            e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Method which returns a Country object with given details.
+     * Returns the object from the database if record with given details exists,
+     * else returns the object from COVID-19 API [https://rapidapi.com/api-sports/api/covid-193].
+     *
+     * @param country country name
+     * @param targetDate data date
+     * @return Country object
+     */
+    public Country getCountry(String country, String targetDate) {
+
+        if(targetDate.equals("today")) {
+            targetDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+        }
+        else {
+            try {
+                Integer.parseInt(targetDate.replaceAll("-", ""));
+            } catch (Exception e) {
+                return  null;
+            }
+        }
+
+        if(countryIsCached(country, targetDate)) {
+            return getCachedCountry(country, targetDate);
+        }
+
+        Country resultCountry = CovidApiHandler.getCountryData(country, targetDate);
+        if(resultCountry != null) {
+            cacheCountry(resultCountry, targetDate);
+        }
+        return resultCountry;
     }
 
     //FAVOURITES-------------------------------------
