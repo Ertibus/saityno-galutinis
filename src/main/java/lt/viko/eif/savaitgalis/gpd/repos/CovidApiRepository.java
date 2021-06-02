@@ -52,7 +52,7 @@ public class CovidApiRepository {
      *
      * @param country country name to check
      * @param targetDate data date
-     * @return record with given details exists boolean
+     * @return true if record exists, false if not
      */
     private boolean countryIsCached(String country, String targetDate) {
 
@@ -94,6 +94,34 @@ public class CovidApiRepository {
             prepStat.executeUpdate();
         } catch (SQLException e) {
         }
+    }
+
+    /**
+     * Method which returns Country object with given details from the database.
+     *
+     * @param country country name
+     * @param targetDate data date
+     * @return Country object
+     */
+    private Country getCachedCountry(String country, String targetDate) {
+
+        int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
+
+        String sql = "SELECT * FROM `cache` WHERE " +
+                ResponseToPojo.sqlCountry + " = ? AND " +
+                ResponseToPojo.sqlDate + " = ?";
+        try (PreparedStatement prepStat = conn.prepareStatement(sql)){
+
+            prepStat.setString(1, country);
+            prepStat.setInt(2, intTargetDate);
+
+            ResultSet rs = prepStat.executeQuery();
+            while (rs.next()) {
+                return ResponseToPojo.responseFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+        }
+        return null;
     }
 
     //FAVOURITES-------------------------------------
