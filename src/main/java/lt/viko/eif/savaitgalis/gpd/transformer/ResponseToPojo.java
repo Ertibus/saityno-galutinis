@@ -44,10 +44,16 @@ public class ResponseToPojo {
 
         JSONObject jsonObject = (JSONObject)parse.parse(responseBody);
 
+
         Country returnCountry = new Country();
 
         JSONArray responseArray = (JSONArray)jsonObject.get("response");
-        JSONObject newestResponse = (JSONObject)responseArray.get(0);
+        JSONObject newestResponse;
+        try{
+            newestResponse = (JSONObject)responseArray.get(0);
+        } catch (Exception err) {
+            return null;
+        }
 
         returnCountry.setCountry(newestResponse.get("country").toString());
         returnCountry.setDate(newestResponse.get("day").toString());
