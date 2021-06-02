@@ -5,6 +5,7 @@ import lt.viko.eif.savaitgalis.gpd.pojo.Country;
 import lt.viko.eif.savaitgalis.gpd.transformer.ResponseToPojo;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 /**
  * A Covid API repository class.
@@ -40,7 +41,6 @@ public class CovidApiRepository {
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
         return conn;
     }
@@ -57,6 +57,7 @@ public class CovidApiRepository {
     private boolean countryIsCached(String country, String targetDate) {
 
         int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
+
         String sql = "SELECT COUNT() AS num FROM `cache` WHERE " +
                 ResponseToPojo.sqlCountry + " = ? AND " +
                 ResponseToPojo.sqlDate + " = ?";
@@ -72,9 +73,27 @@ public class CovidApiRepository {
                     return true;
             }
         } catch (SQLException e) {
-            //System.out.println(e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Method that removes expired data from the database.
+     */
+    private void removeExpiredData() {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        int intTodayDate = Integer.parseInt(simpleDateFormat.format(new java.util.Date()));
+
+        String sql = "DELETE FROM `cache` WHERE expiration_date <= ?";
+        try {
+            PreparedStatement prepStat  = conn.prepareStatement(sql);
+
+            prepStat.setInt(1, intTodayDate);
+
+            prepStat.executeUpdate();
+        } catch (SQLException e) {
+        }
     }
 
     //FAVOURITES-------------------------------------
