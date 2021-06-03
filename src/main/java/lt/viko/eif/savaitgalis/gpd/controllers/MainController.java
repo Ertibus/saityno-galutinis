@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping(value = "/api/covid", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MainController {
 
-    private CovidApiRepository repo;
+    final private CovidApiRepository repo;
 
     // ~TEMP~
     /*private Cases tCase = new Cases(77777, 77777, 77777, 77777, 77777);
@@ -42,7 +42,7 @@ public class MainController {
      * @param date Describes wanted date.
      * @return ResponseEntity.
      */
-    @GetMapping("/country/stats/{name}")
+    @GetMapping("/{name}")
     @ResponseBody
     public ResponseEntity<EntityModel<Country>> getStatsByCountry(@PathVariable String name, @RequestParam(required = false) String date) {
 
@@ -64,7 +64,7 @@ public class MainController {
      * GET request annotation for receiving all favorite countries statistics from repository.
      * @return ResponseEntity.
      */
-    @GetMapping("/country/stats/fav")
+    @GetMapping("/fav")
     @ResponseBody
     public ResponseEntity<EntityModel<List<Country>>> getFavoriteStats() {
 
@@ -91,7 +91,7 @@ public class MainController {
      * @param name Describes country's name.
      * @return ResponseEntity.
      */
-    @PutMapping("/country/stats/fav/{name}")
+    @PutMapping("/fav/{name}")
     public ResponseEntity<EntityModel<Country>> putCountryToFav(@RequestBody Country country, @PathVariable String name) {
 
         List<Country> favCountries = repo.getFavouriteCountryStats();
@@ -113,7 +113,7 @@ public class MainController {
      * @param name Describes country's name.
      * @return ResponseEntity.
      */
-    @DeleteMapping("/country/stats/fav/{name}")
+    @DeleteMapping("/fav/{name}")
     public ResponseEntity<EntityModel<Country>> putCountryToFav(@PathVariable String name) {
 
         List<Country> favCountries = repo.getFavouriteCountryStats();
