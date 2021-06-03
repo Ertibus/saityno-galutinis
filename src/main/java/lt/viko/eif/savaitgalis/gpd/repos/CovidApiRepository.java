@@ -6,7 +6,9 @@ import lt.viko.eif.savaitgalis.gpd.transformer.ResponseToPojo;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A Covid API repository class.
@@ -286,5 +288,28 @@ public class CovidApiRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Method which returns a list of all favourite country names from the database.
+     *
+     * @return list of favourite country names
+     */
+    private List<String> getFavouriteNamesList() {
+
+        List<String> favouriteNamesList = new ArrayList<>();
+        String sql = "SELECT * FROM `favourite`";
+        try {
+            Statement stat = conn.createStatement();
+            ResultSet rs = stat.executeQuery(sql);
+            while (rs.next()) {
+                favouriteNamesList.add(rs.getString("country"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(favouriteNamesList.size() == 0)
+            return null;
+        return favouriteNamesList;
     }
 }
