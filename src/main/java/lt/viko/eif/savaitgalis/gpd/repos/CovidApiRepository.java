@@ -191,6 +191,8 @@ public class CovidApiRepository {
      */
     public Country getCountry(String country, String targetDate) {
 
+        country = country.toLowerCase();
+
         if(targetDate.equals("today")) {
             targetDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
         }
@@ -240,5 +242,28 @@ public class CovidApiRepository {
         return false;
     }
 
-    
+    /**
+     * Method which inserts the given country name into the database.
+     *
+     * @param country country name to insert
+     */
+    public void addFavouriteCountry(String country) {
+
+        country = country.toLowerCase();
+
+        if(favouriteCountryExists(country))
+            return;
+
+        String sql = "INSERT INTO `favourite` (country) VALUES (?)";
+
+        try {
+            PreparedStatement prepStat  = conn.prepareStatement(sql);
+
+            prepStat.setString(1, country);
+
+            prepStat.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
