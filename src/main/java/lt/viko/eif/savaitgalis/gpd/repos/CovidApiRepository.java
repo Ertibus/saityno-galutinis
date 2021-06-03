@@ -20,7 +20,7 @@ import java.util.List;
 public class CovidApiRepository {
 
     private final String DB_URL = "jdbc:sqlite:gpdDatabase.db";
-    private Connection conn;
+    private final Connection conn;
 
     /**
      * Constructor which calls connectToDB method and saves the connection.
@@ -39,13 +39,12 @@ public class CovidApiRepository {
      */
     private Connection connectToDB() {
 
-        Connection conn = null;
         try {
-            conn = DriverManager.getConnection(DB_URL);
+            return DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return conn;
+        return null;
     }
 
     //CACHE------------------------------------------
@@ -195,7 +194,7 @@ public class CovidApiRepository {
 
         country = country.toLowerCase();
 
-        if(targetDate.equals("today")) {
+        if(targetDate.equalsIgnoreCase("today")) {
             targetDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
         }
         else {
@@ -311,5 +310,23 @@ public class CovidApiRepository {
         if(favouriteNamesList.size() == 0)
             return null;
         return favouriteNamesList;
+    }
+
+    /**
+     * Method which returns a list of favourite Country objects from the database.
+     *
+     * @return list of Country objects
+     */
+    public List<Country> getFavouriteCountryStats() {
+
+         List<Country> favouriteCountryStats = new ArrayList<>();
+         try {
+             for(String s : getFavouriteNamesList()) {
+                 favouriteCountryStats.add(getCountry(s, "today"));
+             }
+             return favouriteCountryStats;
+         } catch(Exception e) {
+             return null;
+         }
     }
 }
