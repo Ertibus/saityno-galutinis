@@ -214,4 +214,31 @@ public class CovidApiRepository {
     }
 
     //FAVOURITES-------------------------------------
+
+    /**
+     * Method for determining whether a record with given details exists in the database or not.
+     *
+     * @param country country name to check
+     * @return true if record exists, false if not
+     */
+    private boolean favouriteCountryExists(String country) {
+
+        String sql = "SELECT COUNT() AS num FROM `favourite` WHERE country = ?";
+        try {
+            PreparedStatement prepStat = conn.prepareStatement(sql);
+
+            prepStat.setString(1, country);
+
+            ResultSet rs = prepStat.executeQuery();
+            while (rs.next()) {
+                if(rs.getInt("num")>=1)
+                    return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    
 }
