@@ -80,7 +80,7 @@ public class CovidApiRepository {
     }
 
     /**
-     * Method that removes expired data from the database.
+     * Method which removes expired data from the database.
      */
     private void removeExpiredData() {
 
@@ -256,6 +256,27 @@ public class CovidApiRepository {
 
         String sql = "INSERT INTO `favourite` (country) VALUES (?)";
 
+        try {
+            PreparedStatement prepStat  = conn.prepareStatement(sql);
+
+            prepStat.setString(1, country);
+
+            prepStat.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method which deletes given country name from the database.
+     *
+     * @param country country name to delete
+     */
+    public void removeFavouriteCountry(String country) {
+
+        country = country.toLowerCase();
+
+        String sql = "DELETE FROM `favourite` WHERE country = ?";
         try {
             PreparedStatement prepStat  = conn.prepareStatement(sql);
 
