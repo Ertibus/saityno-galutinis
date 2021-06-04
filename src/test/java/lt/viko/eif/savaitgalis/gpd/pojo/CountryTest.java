@@ -32,9 +32,9 @@ class CountryTest {
     @Test
     void getterSetterDate() {
         Country country = new Country();
-        String value = "77777";
+        int value = 77777;
         country.setDate(value);
-        assertEquals("77777", country.getDate());
+        assertEquals(77777, country.getDate());
     }
     /**
      * Test for the Getter and Setter of 'tests' field

@@ -14,7 +14,7 @@ package lt.viko.eif.savaitgalis.gpd.pojo;
  */
 public class Country {
     private String country;
-    private String date;
+    private int date;
     private int tests;
     private Cases cases;
     private Deaths deaths;
@@ -24,7 +24,7 @@ public class Country {
      */
     public Country() {
         this.country = "country";
-        this.date = "1999-12-25";
+        this.date = 19991225;
         this.tests = 0;
         this.cases  = new Cases();
         this.deaths = new Deaths();
@@ -40,7 +40,7 @@ public class Country {
      * @see Cases
      * @see Deaths
      */
-    public Country(String country, String date, int tests, Cases cases, Deaths deaths) {
+    public Country(String country, int date, int tests, Cases cases, Deaths deaths) {
         this.country = country;
         this.date = date;
         this.tests = tests;
@@ -70,14 +70,14 @@ public class Country {
      * Getter for the date, the data represents.
      * @return a string date of data
      */
-    public String getDate() {
+    public int getDate() {
         return date;
     }
     /**
      * Setter for the date, the data represents.
      * @param date of data
      */
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 

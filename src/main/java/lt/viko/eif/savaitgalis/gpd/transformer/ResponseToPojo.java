@@ -21,16 +21,16 @@ import java.sql.SQLException;
  */
 public class ResponseToPojo {
     // SQLite table fields used by transformFromResultSet
-    public static final String SQL_COUNTRY = "country";
-    public static final String SQL_DATE = "date";
-    public static final String SQL_TESTS = "tests";
-    public static final String SQL_CASES_NEW = "cases_new";
-    public static final String SQL_CASES_ACTIVE = "cases_active";
-    public static final String SQL_CASES_CRITICAL = "cases_critical";
-    public static final String SQL_CASES_RECOVERED = "cases_recovered";
-    public static final String SQL_CASES_TOTAL = "cases_total";
-    public static final String SQL_DEATHS_NEW = "deaths_new";
-    public static final String SQL_DEATHS_TOTAL = "deaths_total";
+    public static final String sqlCountry = "country";
+    public static final String sqlDate = "date";
+    public static final String sqlTests = "tests";
+    public static final String sqlCasesNew = "cases_new";
+    public static final String sqlCasesActive = "cases_active";
+    public static final String sqlCasesCritical = "cases_critical";
+    public static final String sqlCasesRecovered = "cases_recovered";
+    public static final String sqlCasesTotal = "cases_total";
+    public static final String sqlDeathsNew = "deaths_new";
+    public static final String sqlDeathsTotal = "deaths_total";
 
     /**
      * Creates a {@link Country} object from API response.
@@ -44,19 +44,13 @@ public class ResponseToPojo {
 
         JSONObject jsonObject = (JSONObject)parse.parse(responseBody);
 
-
         Country returnCountry = new Country();
 
         JSONArray responseArray = (JSONArray)jsonObject.get("response");
-        JSONObject newestResponse;
-        try{
-            newestResponse = (JSONObject)responseArray.get(0);
-        } catch (Exception err) {
-            return null;
-        }
+        JSONObject newestResponse = (JSONObject)responseArray.get(0);
 
         returnCountry.setCountry(newestResponse.get("country").toString());
-        returnCountry.setDate(newestResponse.get("day").toString());
+        returnCountry.setDate(Integer.parseInt(newestResponse.get("day").toString().replaceAll("-", "")));
 
         JSONObject casesObject = (JSONObject)newestResponse.get("cases");
         Cases cases = new Cases();
@@ -92,8 +86,8 @@ public class ResponseToPojo {
      * @throws SQLException SQLite getInt or getString failed
      */
     public static Country responseFromResultSet(ResultSet resultSet) throws SQLException {
-        Cases cases = new Cases(resultSet.getInt(SQL_CASES_NEW), resultSet.getInt(SQL_CASES_ACTIVE), resultSet.getInt(SQL_CASES_CRITICAL), resultSet.getInt(SQL_CASES_RECOVERED), resultSet.getInt(SQL_CASES_TOTAL));
-        Deaths deaths = new Deaths(resultSet.getInt(SQL_DEATHS_NEW), resultSet.getInt(SQL_DEATHS_TOTAL));
-        return new Country(resultSet.getString(SQL_COUNTRY), resultSet.getString(SQL_DATE), resultSet.getInt(SQL_TESTS), cases, deaths);
+        Cases cases = new Cases(resultSet.getInt(sqlCasesNew), resultSet.getInt(sqlCasesActive), resultSet.getInt(sqlCasesCritical), resultSet.getInt(sqlCasesRecovered), resultSet.getInt(sqlCasesTotal));
+        Deaths deaths = new Deaths(resultSet.getInt(sqlDeathsNew), resultSet.getInt(sqlDeathsTotal));
+        return new Country(resultSet.getString(sqlCountry), resultSet.getInt(sqlDate), resultSet.getInt(sqlTests), cases, deaths);
     }
 }

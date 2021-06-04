@@ -28,7 +28,7 @@ class ResponseToPojoTest {
 
         Cases cases = new Cases(503, 15299, 147, 254322, 273866);
         Deaths deaths = new Deaths(5, 4245);
-        Country country = new Country("Lithuania", "2021-05-29", 3346203, cases, deaths);
+        Country country = new Country("Lithuania", 20210529, 3346203, cases, deaths);
 
         Country pojoCountry = null;
         try {
