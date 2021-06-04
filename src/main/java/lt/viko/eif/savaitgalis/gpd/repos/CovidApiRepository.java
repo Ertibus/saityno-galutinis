@@ -21,14 +21,14 @@ import java.util.List;
 public class CovidApiRepository {
 
     public static final String DB_URL = "jdbc:sqlite:gpdDatabase.db";
-    private final Connection conn;
+    private static Connection conn;
 
     /**
      * Constructor which calls connectToDB method and saves the connection.
      */
     public CovidApiRepository() {
-
-        this.conn = connectToDB();
+        if (this.conn == null)
+            this.conn = connectToDB();
     }
 
     //CONNECTION-------------------------------------
@@ -209,7 +209,7 @@ public class CovidApiRepository {
         if(countryIsCached(country, targetDate)) {
             return getCachedCountry(country, targetDate);
         }
-
+        targetDate = new StringBuilder(targetDate.replaceAll("-", "")).insert(4, "-").insert(7, "-").toString();
         Country resultCountry = CovidApiHandler.getCountryData(country, targetDate);
         if(resultCountry != null) {
             cacheCountry(resultCountry, targetDate);

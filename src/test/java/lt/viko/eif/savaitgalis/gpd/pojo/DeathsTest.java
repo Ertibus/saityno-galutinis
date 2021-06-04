@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for {@link Deaths}
+ *
  * @author Emilis Margevičius PI19B
  * @version 1.0
  * @since 1.0

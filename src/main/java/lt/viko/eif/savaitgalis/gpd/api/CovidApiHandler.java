@@ -21,6 +21,7 @@ import java.util.Objects;
 public class CovidApiHandler {
     /**
      * Send a request to COVID-19 API to get a {@link Country}
+     *
      * @param country the search target. Use 'all' for global
      * @param day the target day. Format: YYYY-MM-DD
      * @return a {@link Country} object

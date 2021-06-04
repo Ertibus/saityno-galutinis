@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * CovidApiHandler
+ *
  * @author Emilis Margevičius PI19B
  * @version 1.0
  * @since 1.0

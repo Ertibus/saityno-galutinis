@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for {@link ResponseToPojo}
+ *
  * @author Emilis Margevičius PI19B
  * @version 1.0
  * @since 1.0
@@ -28,7 +29,7 @@ class ResponseToPojoTest {
 
         Cases cases = new Cases(503, 15299, 147, 254322, 273866);
         Deaths deaths = new Deaths(5, 4245);
-        Country country = new Country("Lithuania", 20210529, 3346203, cases, deaths);
+        Country country = new Country("lithuania", 20210529, 3346203, cases, deaths);
 
         Country pojoCountry = null;
         try {

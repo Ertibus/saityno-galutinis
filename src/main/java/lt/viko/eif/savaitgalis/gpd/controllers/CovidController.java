@@ -1,8 +1,10 @@
 package lt.viko.eif.savaitgalis.gpd.controllers;
 
-import lt.viko.eif.savaitgalis.gpd.pojo.Cases;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lt.viko.eif.savaitgalis.gpd.pojo.Country;
-import lt.viko.eif.savaitgalis.gpd.pojo.Deaths;
 import lt.viko.eif.savaitgalis.gpd.repos.CovidApiRepository;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,6 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Represents a REST controller for GPD web service.
+ *
  * @author Žilvinas Mockus PI19B
  * @version 1.0
  * @since 1.0
@@ -29,21 +32,31 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/api/covid", produces = MediaType.APPLICATION_JSON_VALUE)
-public class MainController {
+@Tag(name="Covid API", description = "Represents a REST controller for GPD web service")
+public class CovidController {
 
     final private CovidApiRepository repo;
 
-    public MainController(){
+    public CovidController(){
         repo = new CovidApiRepository();
     }
 
     /**
      * GET request annotation for receiving statistics by date and country from repository.
+     *
      * @param name Describes country's name.
      * @param date Describes wanted date.
-     * @return ResponseEntity.
+     * @return ResponseEntity
+     * @see Country
      */
     @GetMapping("/{name}")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "OK!"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request!")
+            }
+    )
+    @Operation(summary="Get Statistics by Country", description = "Returns a countries COVID statistics, within the given date. For global statistics input 'all'")
     @ResponseBody
     public ResponseEntity<EntityModel<Country>> getStatsByCountry(@PathVariable String name, @RequestParam(required = false) String date) {
 
@@ -56,7 +69,7 @@ public class MainController {
             country = repo.getCountry(name, date);
 
         if (country == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         EntityModel<Country> model = EntityModel.of(country);
@@ -68,9 +81,18 @@ public class MainController {
 
     /**
      * GET request annotation for receiving all favorite countries statistics from repository.
+     *
      * @return ResponseEntity.
+     * @see Country
      */
     @GetMapping("/fav")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "OK!"),
+                    @ApiResponse(responseCode = "204", description = "No content!")
+            }
+    )
+    @Operation(summary="Get favorite countries statistics", description = "Returns a list of favorite countries COVID statistics today")
     @ResponseBody
     public ResponseEntity<CollectionModel<EntityModel<Country>>> allFavCountry() {
 
@@ -80,21 +102,29 @@ public class MainController {
 
         List<EntityModel<Country>> countries = tempList.stream()
                 .map(country -> EntityModel.of(country,
-                        linkTo(methodOn(MainController.class).getStatsByCountry(country.getCountry(), String.valueOf(country.getDate()))).withSelfRel(),
-                        linkTo(methodOn(MainController.class).allFavCountry()).withRel("get-fav")
+                        linkTo(methodOn(CovidController.class).getStatsByCountry(country.getCountry(), String.valueOf(country.getDate()))).withSelfRel(),
+                        linkTo(methodOn(CovidController.class).allFavCountry()).withRel("get-fav")
                         )
                 ).collect(Collectors.toList());
 
-        return ResponseEntity.ok(CollectionModel.of(countries, linkTo(methodOn(MainController.class).allFavCountry()).withSelfRel()));
+        return ResponseEntity.ok(CollectionModel.of(countries, linkTo(methodOn(CovidController.class).allFavCountry()).withSelfRel()));
     }
 
     /**
      * PUT request annotation for adding favorite country by its name to repository.
-     * @param country Describes {@link Country} object.
+     *
      * @param name Describes country's name.
      * @return ResponseEntity.
+     * @see Country
      */
     @PutMapping("/fav/{name}")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "OK!"),
+                    @ApiResponse(responseCode = "201", description = "CREATED!"),
+            }
+    )
+    @Operation(summary="Add a country to favorites", description = "Adds a country to favorites list.")
     public ResponseEntity<EntityModel<Country>> putCountryToFav(@PathVariable String name) {
 
         List<Country> favCountries = repo.getFavouriteCountryStats();
@@ -115,10 +145,19 @@ public class MainController {
 
     /**
      * DELETE request annotation for removing favorite country by its name from repository.
+     *
      * @param name Describes country's name.
      * @return ResponseEntity.
+     * @see Country
      */
     @DeleteMapping("/fav/{name}")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "OK!"),
+                    @ApiResponse(responseCode = "404", description = "Not found!")
+            }
+    )
+    @Operation(summary="Delete a country from favorites", description = "Removes a country from the favorites list.")
     public ResponseEntity<EntityModel<Country>> deleteCountryFromFav(@PathVariable String name) {
 
         List<Country> favCountries = repo.getFavouriteCountryStats();

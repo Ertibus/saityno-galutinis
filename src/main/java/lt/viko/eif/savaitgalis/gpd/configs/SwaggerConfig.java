@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
     /**
      * A Spring Bean that sets the header/info section of SwaggerUI
+     *
      * @return {@link OpenAPI} object with the header information
      */
     @Bean

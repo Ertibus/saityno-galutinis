@@ -1,5 +1,7 @@
 package lt.viko.eif.savaitgalis.gpd.pojo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * Represents Country object that we use to store data from COVID API
  * It's also used to cache the response.
@@ -12,11 +14,17 @@ package lt.viko.eif.savaitgalis.gpd.pojo;
  * @see Cases
  * @see Deaths
  */
+@Schema(title = "Country", description = "Country POJO object")
 public class Country {
+    @Schema(title = "Country name", description = "Country name")
     private String country;
+    @Schema(title = "Date of search", description = "Day the search represents")
     private int date;
+    @Schema(title = "Test", description = "The amount of testing done")
     private int tests;
+    @Schema(title = "Cases object", description = "Information about cases")
     private Cases cases;
+    @Schema(title = "Deaths object", description = "Information about deaths")
     private Deaths deaths;
 
     /**

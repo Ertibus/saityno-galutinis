@@ -1,5 +1,7 @@
 package lt.viko.eif.savaitgalis.gpd.pojo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * Represents Cases object that is used by {@link Country}
  *
@@ -10,9 +12,13 @@ package lt.viko.eif.savaitgalis.gpd.pojo;
  * @since 1.0
  * @see Country
  */
+@Schema(title = "Deaths", description = "Deaths coused by Covid-19")
 public class Deaths {
 
+    @Schema(title = "New Deaths", description = "How many deaths occurred today")
     private int newDeaths;
+
+    @Schema(title = "Total Deaths", description = "Total amount of people that died from Covid-19")
     private int total;
 
     /**
@@ -25,6 +31,7 @@ public class Deaths {
 
     /**
      * Constructor with parameters
+     *
      * @param newDeaths number of new deaths
      * @param total number of total deaths
      */
@@ -35,6 +42,7 @@ public class Deaths {
 
     /**
      * Getter for the number of new deaths caused by Covid-19
+     *
      * @return an integer of new deaths caused by Covid-19
      */
     public int getNewDeaths() {
@@ -42,6 +50,7 @@ public class Deaths {
     }
     /**
      * Getter for the number of new deaths caused by Covid-19
+     *
      * @param newDeaths new deaths caused by Covid-19
      */
     public void setNewDeaths(int newDeaths) {
@@ -50,6 +59,7 @@ public class Deaths {
 
     /**
      * Getter for the number of total deaths caused by Covid-19
+     *
      * @return an integer of total deaths caused by Covid-19
      */
     public int getTotalDeaths() {
@@ -57,6 +67,7 @@ public class Deaths {
     }
     /**
      * Getter for the number of total deaths caused by Covid-19
+     *
      * @param deaths total deaths caused by Covid-19
      */
     public void setTotalDeaths(int deaths) {

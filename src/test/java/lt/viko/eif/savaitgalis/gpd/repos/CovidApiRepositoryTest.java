@@ -21,11 +21,12 @@ class CovidApiRepositoryTest {
     @Test
     void connectToDb() {
         try {
-            DriverManager.getConnection(CovidApiRepository.DB_URL);
+            DriverManager.getConnection(CovidApiRepository.DB_URL).close();
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Failed to connect to the database");
         }
+
     }
     /**
      * Test if caching is successful

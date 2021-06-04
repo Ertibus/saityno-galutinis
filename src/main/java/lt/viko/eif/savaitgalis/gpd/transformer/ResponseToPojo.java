@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.validation.constraints.Null;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -35,6 +36,7 @@ public class ResponseToPojo {
 
     /**
      * Creates a {@link Country} object from API response.
+     *
      * @param responseBody a JSON string that we get from the API
      * @return a {@link Country} object filled with responseBody Data
      * @throws ParseException JSON parsing exception
@@ -73,19 +75,19 @@ public class ResponseToPojo {
         deaths.setTotalDeaths(Integer.parseInt(deathsObject.get("total").toString()));
         returnCountry.setDeaths(deaths);
 
-        JSONObject testsObject = (JSONObject)newestResponse.get("tests");
-        returnCountry.setTests(Integer.parseInt(testsObject.get("total").toString()));
+        try {
+            JSONObject testsObject = (JSONObject) newestResponse.get("tests");
+            returnCountry.setTests(Integer.parseInt(testsObject.get("total").toString()));
+
+        } catch (NullPointerException exception) {
+            returnCountry.setTests(-1);
+        }
 
         return returnCountry;
     }
 
     /**
      * Creates a {@link Country} object from the ResultSet of SQLite query. It doesn't loop. Returns only 1 object
-     *
-     * Implementation should look something like:
-     *
-     * loop through result set:
-     *      Country country is responseFromResultSet(result set)
      *
      * @param resultSet the result set pointer
      * @return a Country object filled with data from the result
