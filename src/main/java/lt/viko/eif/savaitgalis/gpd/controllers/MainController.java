@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
@@ -46,11 +47,16 @@ public class MainController {
     @ResponseBody
     public ResponseEntity<EntityModel<Country>> getStatsByCountry(@PathVariable String name, @RequestParam(required = false) String date) {
 
-        Country country = repo.getCountry(name, date);
-        if (date.equals("")) {
+        Country country;
+
+        if (date == null || date.isEmpty()) {
             country = repo.getCountry(name, "today");
-            if (country.equals(null))
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        else
+            country = repo.getCountry(name, date);
+
+        if (country == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         EntityModel<Country> model = EntityModel.of(country);
@@ -67,9 +73,14 @@ public class MainController {
     @GetMapping("/fav")
     @ResponseBody
     public ResponseEntity<CollectionModel<EntityModel<Country>>> allFavCountry() {
-        List<EntityModel<Country>> countries = repo.getFavCountries().stream()
+
+        List<Country> tempList = repo.getFavouriteCountryStats();
+        if (tempList == null)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        List<EntityModel<Country>> countries = tempList.stream()
                 .map(country -> EntityModel.of(country,
-                        linkTo(methodOn(MainController.class).getStatsByCountry(country.getCountry())).withSelfRel(),
+                        linkTo(methodOn(MainController.class).getStatsByCountry(country.getCountry(), String.valueOf(country.getDate()))).withSelfRel(),
                         linkTo(methodOn(MainController.class).allFavCountry()).withRel("get-fav")
                         )
                 ).collect(Collectors.toList());
@@ -84,15 +95,17 @@ public class MainController {
      * @return ResponseEntity.
      */
     @PutMapping("/fav/{name}")
-    public ResponseEntity<EntityModel<Country>> putCountryToFav(@RequestBody Country country, @PathVariable String name) {
+    public ResponseEntity<EntityModel<Country>> putCountryToFav(@PathVariable String name) {
 
         List<Country> favCountries = repo.getFavouriteCountryStats();
-        for (Country c : favCountries) {
-            if (c.getCountry().equals(name))
-                return ResponseEntity.ok(null);
+        if (favCountries != null) {
+            for (Country c : favCountries) {
+                if (c.getCountry().equals(name))
+                    return ResponseEntity.ok(EntityModel.of(c));
+            }
         }
 
-        EntityModel<Country> model = EntityModel.of(country);
+        EntityModel<Country> model = EntityModel.of(repo.getCountry(name, "today"));
         final String uriString = ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString();
         model.add(Link.of(uriString, "self"));
         repo.addFavouriteCountry(name);
@@ -106,7 +119,7 @@ public class MainController {
      * @return ResponseEntity.
      */
     @DeleteMapping("/fav/{name}")
-    public ResponseEntity<EntityModel<Country>> putCountryToFav(@PathVariable String name) {
+    public ResponseEntity<EntityModel<Country>> deleteCountryFromFav(@PathVariable String name) {
 
         List<Country> favCountries = repo.getFavouriteCountryStats();
         for (Country c : favCountries) {
