@@ -1,5 +1,6 @@
 package lt.viko.eif.savaitgalis.gpd.repos;
 
+import lt.viko.eif.savaitgalis.gpd.pojo.Country;
 import org.junit.jupiter.api.Test;
 
 import java.sql.DriverManager;
@@ -26,5 +27,23 @@ class CovidApiRepositoryTest {
             fail("Failed to connect to the database");
         }
     }
+    /**
+     * Test if caching is successful
+     */
+    @Test
+    void testCaching(){
+        CovidApiRepository repo = new CovidApiRepository();
+        Country cache = repo.getCountry("usa", "2020-06-06");
+        assertNotNull(cache);
+        assertTrue(repo.countryIsCached("usa", "2020-06-06"));
+    }
+
+    @Test
+    void testToday(){
+        CovidApiRepository repo = new CovidApiRepository();
+        Country cache = repo.getCountry("usa", "today");
+        assertNotNull(cache);
+    }
+
 
 }

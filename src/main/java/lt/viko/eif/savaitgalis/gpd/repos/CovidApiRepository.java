@@ -57,7 +57,7 @@ public class CovidApiRepository {
      * @param targetDate data date
      * @return true if record exists, false if not
      */
-    private boolean countryIsCached(String country, String targetDate) {
+    public boolean countryIsCached(String country, String targetDate) {
 
         int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
 

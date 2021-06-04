@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 
 /**
  * A transformer class. That transforms JSON response from the API or SQLite result to {@link Country}.
@@ -54,7 +55,7 @@ public class ResponseToPojo {
             return null;
         }
 
-        returnCountry.setCountry(newestResponse.get("country").toString());
+        returnCountry.setCountry(newestResponse.get("country").toString().toLowerCase());
         returnCountry.setDate(Integer.parseInt(newestResponse.get("day").toString().replaceAll("-", "")));
 
         JSONObject casesObject = (JSONObject)newestResponse.get("cases");
