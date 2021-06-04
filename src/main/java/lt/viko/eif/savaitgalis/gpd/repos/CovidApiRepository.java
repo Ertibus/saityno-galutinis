@@ -108,7 +108,6 @@ public class CovidApiRepository {
      * @return Country object
      */
     private Country getCachedCountry(String country, String targetDate) {
-
         int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
 
         String sql = "SELECT * FROM `cache` WHERE " +
@@ -192,6 +191,7 @@ public class CovidApiRepository {
      * @return Country object
      */
     public Country getCountry(String country, String targetDate) {
+        removeExpiredData();
 
         country = country.toLowerCase();
 
