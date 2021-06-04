@@ -4,6 +4,7 @@ import lt.viko.eif.savaitgalis.gpd.pojo.Cases;
 import lt.viko.eif.savaitgalis.gpd.pojo.Country;
 import lt.viko.eif.savaitgalis.gpd.pojo.Deaths;
 import lt.viko.eif.savaitgalis.gpd.repos.CovidApiRepository;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Represents a REST controller for GPD web service.
@@ -26,11 +31,6 @@ import java.util.List;
 public class MainController {
 
     final private CovidApiRepository repo;
-
-    // ~TEMP~
-    /*private Cases tCase = new Cases(77777, 77777, 77777, 77777, 77777);
-    private Deaths tDeath = new Deaths(77777, 77777);
-    private Country tCountry = new Country("USA", 1234, 1234, tCase, tDeath);*/
 
     public MainController(){
         repo = new CovidApiRepository();
@@ -46,9 +46,9 @@ public class MainController {
     @ResponseBody
     public ResponseEntity<EntityModel<Country>> getStatsByCountry(@PathVariable String name, @RequestParam(required = false) String date) {
 
-        Country country = new repo.getCountry(name, date);
+        Country country = repo.getCountry(name, date);
         if (date.equals("")) {
-            country = new repo.getCountry(name, "today");
+            country = repo.getCountry(name, "today");
             if (country.equals(null))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -66,23 +66,15 @@ public class MainController {
      */
     @GetMapping("/fav")
     @ResponseBody
-    public ResponseEntity<EntityModel<List<Country>>> getFavoriteStats() {
+    public ResponseEntity<CollectionModel<EntityModel<Country>>> allFavCountry() {
+        List<EntityModel<Country>> countries = repo.getFavCountries().stream()
+                .map(country -> EntityModel.of(country,
+                        linkTo(methodOn(MainController.class).getStatsByCountry(country.getCountry())).withSelfRel(),
+                        linkTo(methodOn(MainController.class).allFavCountry()).withRel("get-fav")
+                        )
+                ).collect(Collectors.toList());
 
-        List<Country> favCountries = new repo.getFavouriteCountryStats();
-        if (favCountries.equals(null)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        // TEMP:
-        Cases tCase = new Cases(87777, 77777, 77777, 77777, 77777);
-        Deaths tDeath = new Deaths(77777, 77777);
-        Country tCountry = new Country("USA", 1234, 1234, tCase, tDeath);
-
-        EntityModel<List<Country>> model = EntityModel.of(favCountries);
-        final String uriString = ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString();
-        model.add(Link.of(uriString, "self"));
-
-        return ResponseEntity.ok(model);
+        return ResponseEntity.ok(CollectionModel.of(countries, linkTo(methodOn(MainController.class).allFavCountry()).withSelfRel()));
     }
 
     /**
@@ -97,13 +89,13 @@ public class MainController {
         List<Country> favCountries = repo.getFavouriteCountryStats();
         for (Country c : favCountries) {
             if (c.getCountry().equals(name))
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+                return ResponseEntity.ok(null);
         }
 
         EntityModel<Country> model = EntityModel.of(country);
         final String uriString = ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString();
         model.add(Link.of(uriString, "self"));
-        favCountries.addFavouriteCountry(name);
+        repo.addFavouriteCountry(name);
 
         return ResponseEntity.created(URI.create(uriString)).body(model);
     }
