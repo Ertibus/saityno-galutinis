@@ -1,5 +1,6 @@
 package lt.viko.eif.savaitgalis.gpd.repos;
 
+import lt.viko.eif.savaitgalis.gpd.api.CovidApiHandler;
 import lt.viko.eif.savaitgalis.gpd.pojo.Country;
 import lt.viko.eif.savaitgalis.gpd.transformer.ResponseToPojo;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class CovidApiRepository {
 
-    private final String DB_URL = "jdbc:sqlite:gpdDatabase.db";
+    public static final String DB_URL = "jdbc:sqlite:gpdDatabase.db";
     private final Connection conn;
 
     /**
@@ -61,8 +62,8 @@ public class CovidApiRepository {
         int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
 
         String sql = "SELECT COUNT() AS num FROM `cache` WHERE " +
-                ResponseToPojo.sqlCountry + " = ? AND " +
-                ResponseToPojo.sqlDate + " = ?";
+                ResponseToPojo.SQL_COUNTRY + " = ? AND " +
+                ResponseToPojo.SQL_DATE + " = ?";
         try {
             PreparedStatement prepStat = conn.prepareStatement(sql);
 
@@ -111,8 +112,8 @@ public class CovidApiRepository {
         int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
 
         String sql = "SELECT * FROM `cache` WHERE " +
-                ResponseToPojo.sqlCountry + " = ? AND " +
-                ResponseToPojo.sqlDate + " = ?";
+                ResponseToPojo.SQL_COUNTRY + " = ? AND " +
+                ResponseToPojo.SQL_DATE + " = ?";
         try {
             PreparedStatement prepStat = conn.prepareStatement(sql);
 
@@ -141,16 +142,16 @@ public class CovidApiRepository {
         int intTargetDate = Integer.parseInt(targetDate.replaceAll("-", ""));
 
         String sql = "INSERT INTO `cache` ("+
-                ResponseToPojo.sqlCountry + ", " +
-                ResponseToPojo.sqlDate + ", " +
-                ResponseToPojo.sqlTests + ", " +
-                ResponseToPojo.sqlCasesNew + ", " +
-                ResponseToPojo.sqlCasesActive + ", " +
-                ResponseToPojo.sqlCasesCritical + ", " +
-                ResponseToPojo.sqlCasesRecovered + ", " +
-                ResponseToPojo.sqlCasesTotal + ", " +
-                ResponseToPojo.sqlDeathsNew + ", " +
-                ResponseToPojo.sqlDeathsTotal + ", " +
+                ResponseToPojo.SQL_COUNTRY + ", " +
+                ResponseToPojo.SQL_DATE + ", " +
+                ResponseToPojo.SQL_TESTS + ", " +
+                ResponseToPojo.SQL_CASES_NEW + ", " +
+                ResponseToPojo.SQL_CASES_ACTIVE + ", " +
+                ResponseToPojo.SQL_CASES_CRITICAL + ", " +
+                ResponseToPojo.SQL_CASES_RECOVERED + ", " +
+                ResponseToPojo.SQL_CASES_TOTAL + ", " +
+                ResponseToPojo.SQL_DEATHS_NEW + ", " +
+                ResponseToPojo.SQL_DEATHS_TOTAL + ", " +
                 "expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
