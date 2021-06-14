@@ -1,8 +1,8 @@
 # Web services – final project task <br /> RESTful Web service
 
-* [Emilis Margevičius PI19B](https://github.com/Ertibus)
-* [Ersidas Baniulis PI19B](https://github.com/ersidasb)
-* [Žilvinas Mockus PI19B](https://github.com/z1lvis)
+* [Emilis Margevičius PI19B](https://github.com/Ertibus) QA, Scrum Master
+* [Ersidas Baniulis PI19B](https://github.com/ersidasb) Programmer, Team Member
+* [Žilvinas Mockus PI19B](https://github.com/z1lvis)  Programmer, Project Owner
 
 # Topic
 Covid-19 Web service using an existing [Covid-19 API](https://rapidapi.com/api-sports/api/covid-193) and SQLite.
