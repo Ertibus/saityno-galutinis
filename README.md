@@ -28,7 +28,7 @@ Responses are cached and stored for day, after which they are seen as 'stale'
 - [SQLite-JDBC](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc)
 - [JSON simple](https://mvnrepository.com/artifact/org.apache.clerezza.ext/org.json.simple)
 - [OkHttp](https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp)
-- [Swagger](https://springdoc.org/)
+- [SpringDoc](https://springdoc.org/)
 
 # Task
 ## Description
